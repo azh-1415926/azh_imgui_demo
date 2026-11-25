@@ -1,0 +1,12 @@
+[submodule "third_party/glfw"]
+	path = third_party/glfw
+	url = https://github.com/glfw/glfw.git
+[submodule "third_party/imgui"]
+	path = third_party/imgui
+	url = https://github.com/ocornut/imgui.git
+[submodule "third_party/openxlsx"]
+	path = third_party/openxlsx
+	url = https://github.com/troldal/OpenXLSX.git
+[submodule "third_party/nativefiledialog-extended"]
+	path = third_party/nativefiledialog-extended
+	url = https://github.com/btzy/nativefiledialog-extended.git
