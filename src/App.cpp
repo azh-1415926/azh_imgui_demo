@@ -107,7 +107,7 @@ bool App::Init()
     }
 
     // ★ 脚本式注册子界面：新增模块只需在这里加一行
-    RegisterModule(std::make_unique<ProductExportModule>());
+    RegisterModule(std::make_unique<ProductExportModule>("组合商品导出"));
 
     return true;
 }

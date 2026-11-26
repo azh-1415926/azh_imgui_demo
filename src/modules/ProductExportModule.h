@@ -10,10 +10,6 @@ public:
     void Draw() override;
     void Reset() override;
 
-    // 可在外部指定模板路径；默认使用当前目录下的 template.xlsx
-    void SetTemplatePath(std::string path) { m_templatePath = std::move(path); }
-    const std::string &GetTemplatePath() const { return m_templatePath; }
-
 protected:
     virtual bool OnExport(const std::string &savePath);
 
@@ -24,12 +20,10 @@ private:
 
     std::string m_subProductName;
     std::string m_subProductCode;
-    float m_weight = 0.0f;
+    float m_weight = 0.1f;
     std::string m_owner;
-    std::string m_imageUrl; // 图片地址（可为空）
-    int m_rowCount = 1;     // 导出行数
-
-    std::string m_templatePath = "template.xlsx";
+    std::string m_imageUrl;
+    int m_rowCount = 5;
 
     bool m_showSuccessPopup = false;
     bool m_showErrorPopup = false;
