@@ -16,6 +16,9 @@ set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 set(GLFW_INSTALL OFF CACHE BOOL "" FORCE)
 add_subdirectory(third_party/glfw)
+set(OPENXLSX_CREATE_DOCS OFF)
+set(OPENXLSX_BUILD_SAMPLES OFF)
+add_subdirectory(third_party/openxlsx)
 
 # ---------- ImGui ----------
 add_library(imgui STATIC
@@ -45,5 +48,5 @@ add_executable(ToolFramework
 )
 target_include_directories(ToolFramework PRIVATE src)
 target_link_libraries(ToolFramework PRIVATE
-    glfw glad imgui nfd OpenGL::GL
+    glfw glad imgui nfd OpenGL::GL OpenXLSX
 )

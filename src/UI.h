@@ -1,23 +1,27 @@
 // ============ src/UI.h ============
 #pragma once
-#include <imgui.h>
 #include <cstdio>
+#include <imgui.h>
 #include <string>
 
-namespace UI {
 
-inline bool InputText(const char* label, std::string& value,
-                      ImGuiInputTextFlags flags = 0) {
+namespace UI
+{
+
+inline bool InputText(const char *label, std::string &value, ImGuiInputTextFlags flags = 0)
+{
     ImGui::PushID(label);
     char buf[512];
     std::snprintf(buf, sizeof(buf), "%s", value.c_str());
     bool changed = ImGui::InputText(label, buf, sizeof(buf), flags);
-    if (changed) value = buf;
+    if (changed)
+        value = buf;
     ImGui::PopID();
     return changed;
 }
 
-inline bool InputTextRequired(const char* label, std::string& value) {
+inline bool InputTextRequired(const char *label, std::string &value)
+{
     bool changed = InputText(label, value);
     if (value.empty()) {
         ImGui::SameLine();
@@ -26,7 +30,8 @@ inline bool InputTextRequired(const char* label, std::string& value) {
     return changed;
 }
 
-inline void ShowMessage(const char* title, const char* message, bool* openFlag) {
+inline void ShowMessage(const char *title, const char *message, bool *openFlag)
+{
     if (*openFlag) {
         ImGui::OpenPopup(title);
         *openFlag = false;

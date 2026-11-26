@@ -8,20 +8,22 @@
 #include <cstdio>
 #include <filesystem>
 
-namespace {
+namespace
+{
 
 // 按优先级尝试多个系统字体路径，返回第一个加载成功的字体。
 // 全部失败返回 nullptr，由调用方决定回退策略。
-ImFont* LoadChineseFont(float sizePx) {
-    ImGuiIO& io = ImGui::GetIO();
+ImFont *LoadChineseFont(float sizePx)
+{
+    ImGuiIO &io = ImGui::GetIO();
 
     // 常见系统中文字体路径（按优先级）
-    const char* candidates[] = {
+    const char *candidates[] = {
         // Windows
-        "C:/Windows/Fonts/msyh.ttc",       // 微软雅黑
-        "C:/Windows/Fonts/msyhbd.ttc",     // 微软雅黑 Bold
-        "C:/Windows/Fonts/simhei.ttf",     // 黑体
-        "C:/Windows/Fonts/simsun.ttc",     // 宋体
+        "C:/Windows/Fonts/msyh.ttc",   // 微软雅黑
+        "C:/Windows/Fonts/msyhbd.ttc", // 微软雅黑 Bold
+        "C:/Windows/Fonts/simhei.ttf", // 黑体
+        "C:/Windows/Fonts/simsun.ttc", // 宋体
         // macOS
         "/System/Library/Fonts/PingFang.ttc",
         // Linux
@@ -30,17 +32,17 @@ ImFont* LoadChineseFont(float sizePx) {
         "/usr/share/fonts/truetype/noto/NotoSansCJK-Regular.ttc",
     };
 
-    for (const char* path : candidates) {
+    for (const char *path : candidates) {
         std::error_code ec;
-        if (!std::filesystem::exists(path, ec) || ec) continue;
+        if (!std::filesystem::exists(path, ec) || ec)
+            continue;
 
         // SimplifiedCommon ≈ 2500 常用汉字，体积小、启动快。
         // 如需完整 CJK 字形，改为 io.Fonts->GetGlyphRangesChineseFull()，
         // 但 30px 下会显著增大字体纹理与启动时间（可能超过单张 4096² 纹理），
         // 建议同时把字号降到 20~24，或确保 GPU 支持 8192/16384 纹理。
-        ImFont* font = io.Fonts->AddFontFromFileTTF(
-            path, sizePx, nullptr,
-            io.Fonts->GetGlyphRangesChineseSimplifiedCommon());
+        ImFont *font = io.Fonts->AddFontFromFileTTF(
+            path, sizePx, nullptr, io.Fonts->GetGlyphRangesChineseSimplifiedCommon());
 
         if (font) {
             std::fprintf(stderr, "[font] loaded: %s (%.0fpx)\n", path, sizePx);
@@ -53,7 +55,8 @@ ImFont* LoadChineseFont(float sizePx) {
 
 } // namespace
 
-bool App::Init() {
+bool App::Init()
+{
     if (!glfwInit()) {
         std::fprintf(stderr, "glfwInit failed\n");
         return false;
@@ -72,7 +75,7 @@ bool App::Init() {
     glfwMakeContextCurrent(m_window);
     glfwSwapInterval(1);
 
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+    if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {
         std::fprintf(stderr, "gladLoadGLLoader failed\n");
         return false;
     }
@@ -80,8 +83,8 @@ bool App::Init() {
     // ---------- ImGui 初始化 ----------
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO();
-    (void)io;
+    ImGuiIO &io = ImGui::GetIO();
+    (void) io;
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 
     // ★ 中文字体加载：必须在 ImGui_ImplOpenGL3_Init 之前完成，
@@ -109,16 +112,21 @@ bool App::Init() {
     return true;
 }
 
-void App::RegisterModule(std::unique_ptr<Module> mod) {
-    if (mod) m_modules.push_back(std::move(mod));
+void App::RegisterModule(std::unique_ptr<Module> mod)
+{
+    if (mod)
+        m_modules.push_back(std::move(mod));
 }
 
-void App::RequestReset() {
-    for (auto& mod : m_modules) mod->Reset();
+void App::RequestReset()
+{
+    for (auto &mod : m_modules)
+        mod->Reset();
 }
 
-void App::HandleShortcuts() {
-    ImGuiIO& io = ImGui::GetIO();
+void App::HandleShortcuts()
+{
+    ImGuiIO &io = ImGui::GetIO();
 
     // 用 IsKeyPressed(..., repeat=false) 只在按下那一帧触发，
     // 避免 glfwGetKey 按住时反复触发的问题。
@@ -130,15 +138,18 @@ void App::HandleShortcuts() {
     }
 }
 
-void App::DrawMainMenuBar() {
+void App::DrawMainMenuBar()
+{
     if (ImGui::BeginMainMenuBar()) {
         if (ImGui::BeginMenu("文件")) {
-            if (ImGui::MenuItem("复位", "Ctrl+R")) RequestReset();
-            if (ImGui::MenuItem("退出", "Ctrl+Q")) RequestExit();
+            if (ImGui::MenuItem("复位", "Ctrl+R"))
+                RequestReset();
+            if (ImGui::MenuItem("退出", "Ctrl+Q"))
+                RequestExit();
             ImGui::EndMenu();
         }
         if (ImGui::BeginMenu("视图")) {
-            for (auto& mod : m_modules) {
+            for (auto &mod : m_modules) {
                 bool visible = mod->IsVisible();
                 if (ImGui::MenuItem(mod->GetName().c_str(), nullptr, &visible)) {
                     mod->SetVisible(visible);
@@ -150,7 +161,8 @@ void App::DrawMainMenuBar() {
     }
 }
 
-void App::Run() {
+void App::Run()
+{
     while (!m_shouldExit && !glfwWindowShouldClose(m_window)) {
         glfwPollEvents();
 
@@ -158,11 +170,12 @@ void App::Run() {
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        HandleShortcuts();   // 快捷键优先级最高
+        HandleShortcuts(); // 快捷键优先级最高
         DrawMainMenuBar();
 
-        for (auto& mod : m_modules) {
-            if (mod->IsVisible()) mod->Draw();
+        for (auto &mod : m_modules) {
+            if (mod->IsVisible())
+                mod->Draw();
         }
 
         ImGui::Render();
@@ -177,7 +190,8 @@ void App::Run() {
     }
 }
 
-void App::Shutdown() {
+void App::Shutdown()
+{
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();

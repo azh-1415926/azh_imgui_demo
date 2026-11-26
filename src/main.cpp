@@ -2,7 +2,8 @@
 #include "App.h"
 #include <cstdio>
 
-int main() {
+int main()
+{
     App app;
     if (!app.Init()) {
         std::fprintf(stderr, "App init failed\n");

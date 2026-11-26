@@ -6,12 +6,14 @@
 #include <GLFW/glfw3.h>
 #include <imgui.h>
 
+#include "Module.h"
 #include <memory>
 #include <string>
 #include <vector>
-#include "Module.h"
 
-class App {
+
+class App
+{
 public:
     bool Init();
     void Run();
@@ -26,8 +28,8 @@ private:
     void DrawMainMenuBar();
     void RegisterModule(std::unique_ptr<Module> mod);
 
-    GLFWwindow* m_window = nullptr;
+    GLFWwindow *m_window = nullptr;
     bool m_shouldExit = false;
-    ImFont* m_uiFont = nullptr;   // ★ 保留中文字体指针，方便后续 PushFont / 动态字号
+    ImFont *m_uiFont = nullptr; // ★ 保留中文字体指针，方便后续 PushFont / 动态字号
     std::vector<std::unique_ptr<Module>> m_modules;
 };
